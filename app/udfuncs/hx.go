@@ -6,6 +6,7 @@ import (
     "github.com/cihub/seelog"
 	"os"
 	"path/filepath"
+    "time"
 )
 
 type FTP struct {
@@ -16,11 +17,14 @@ type FTP struct {
 }
 
 func SendHXMsg(title string, tos string, data string) error {
+    nowTime := time.Now()
+    timeFormat := "20060102150405" // 时间格式化模板
+    nowTimeStr := nowTime.Format(timeFormat)
 
     hxData := fmt.Sprintf("title=%v\ntop=%v\ncontent={\n%v\n}END\n", title, tos, data)
     seelog.Debug(hxData)
 
-    filename := fmt.Sprintf("./data/msgfile/%v_%v.dat", "CHKURL", nowDataStr)
+    filename := fmt.Sprintf("./data/msgfile/%v_%v.dat", utils.RandString(10), nowTimeStr)
     err := utils.WriteFile(filename, hxData)
     if err != nil {
         seelog.Errorf("ERROR : %v", err.Error())

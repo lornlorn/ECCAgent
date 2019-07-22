@@ -13,6 +13,7 @@ import (
     "os"
     "strings"
     "time"
+    mrand "math/rand"
 
     "github.com/cihub/seelog"
     "github.com/tidwall/gjson"
@@ -151,7 +152,7 @@ func DecodeGBK2UTF8(in []byte) ([]byte, error) {
 
 // RandString 生成随机字符串
 func RandString(len int) string {
-    r := rand.New(rand.NewSource(time.Now().Unix()))
+    r := mrand.New(mrand.NewSource(time.Now().Unix()))
     bytes := make([]byte, len)
     for i := 0; i < len; i++ {
         b := r.Intn(26) + 65
