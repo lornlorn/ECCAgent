@@ -1,0 +1,27 @@
+<seelog minlevel="trace">
+    <outputs>
+        <splitter formatid="console">
+            <console/>
+        </splitter>
+        <splitter formatid="logfile">
+            <rollingfile type="date" filename="./logs/ECCAgent.log" datepattern="20060102" fullname="true"
+                         maxrolls="31"/>
+            <!--
+            <buffered size="10000" flushperiod="1000">
+                <rollingfile type="date" filename="./log/dlagent.log" datepattern="20060102" fullname="true" maxrolls="31" />
+            </buffered>
+            -->
+        </splitter>
+        <!-- <filter levels="critical">
+            <file path="critical.log" formatid="critical"/>
+            <smtp formatid="criticalemail" senderaddress="noreply-notification-service@none.org" sendername="Automatic notification service" hostname="mail.none.org" hostport="587" username="nns" password="123">
+                <recipient address="john-smith@none.com"/>
+                <recipient address="hans-meier@none.com"/>
+            </smtp>
+        </filter> -->
+    </outputs>
+    <formats>
+        <format id="console" format="%Date %Time [%Level] [%RelFile:%Line] [%Func] %Msg%n"/>
+        <format id="logfile" format="%Date %Time [%Level] [%RelFile:%Line] [%Func] %Msg%n"/>
+    </formats>
+</seelog>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Test</title>
+    <script src="/assets/js/jquery-3.4.1.min.js"></script>
+    <script src="/assets/js/test.js"></script>
+</head>
+
+<body>
+<div id="exec_test">
+    <div>
+        <label>环境变量1</label><input type="text" id="env1" value="TEST1=AAA"/>
+        <label>环境变量2</label><input type="text" id="env2" value="TEST2=BBB"/>
+    </div>
+    <div>
+        <label>命令</label><input type="text" id="cmd" value=".\data\cmd\test.bat"/>
+    </div>
+    <div>
+        <label>参数1</label><input type="text" id="arg1" value="Hello"/>
+        <label>参数2</label><input type="text" id="arg2" value="World"/>
+    </div>
+    <div>
+        <button id="exec_submit">提交</button>
+    </div>
+    <div>
+        <label>返回</label><textarea type="text" id="ret" rows="5" cols="100"></textarea>
+    </div>
+</div>
+
+<div>=============================================</div>
+
+<div id="cron_test">
+    <div>
+        <label>名称</label><input type="text" id="CronName" value="测试Cron"/>
+    </div>
+    <div>
+        <label>定时描述</label><input type="text" id="CronSpec" value="0 */1 * * * *"/>
+    </div>
+    <div>
+        <label>环境变量1</label><input type="text" id="CronEnv1" value="TEST1=AAA"/>
+        <label>环境变量2</label><input type="text" id="CronEnv2" value="TEST2=BBB"/>
+    </div>
+    <div>
+        <label>命令</label><input type="text" id="CronCmd" value=".\data\cmd\test.bat"/>
+    </div>
+    <div>
+        <label>参数1</label><input type="text" id="CronArg1" value="Hello"/>
+        <label>参数2</label><input type="text" id="CronArg2" value="World"/>
+    </div>
+    <div>
+        <label>状态</label>
+        <select id="CronStatus">
+            <option selected>启用</option>
+            <option>禁用</option>
+        </select>
+    </div>
+    <div>
+        <label>描述</label><textarea type="text" id="CronDesc" rows="5" cols="100"></textarea>
+    </div>
+    <div>
+        <label>UUID</label><input type="text" id="CronUuid"/>
+    </div>
+    <div>
+        <button id="CronAdd_submit">新增</button>
+        <button id="CronUpdate_submit">更新</button>
+        <button id="CronDisable_submit">禁用</button>
+        <button id="CronDelete_submit">删除</button>
+    </div>
+    <div>
+        <label>返回</label><textarea type="text" id="CronRet" rows="5" cols="100"></textarea>
+    </div>
+</div>
+
+</body>
+
+</html>
