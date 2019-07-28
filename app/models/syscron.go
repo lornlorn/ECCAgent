@@ -20,6 +20,7 @@ type SysCron struct {
     CronArgs   string `xorm:"VARCHAR(512)"`
     CronStatus string `xorm:"VARCHAR(16)   NOT NULL"`
     CronDesc   string `xorm:"VARCHAR(1024)"`
+    CronHx     string `xorm:"VARCHAR(1024)"`
 }
 
 /*
@@ -34,6 +35,7 @@ type NewCron struct {
     CronArgs   string `xorm:"VARCHAR(512)"`
     CronStatus string `xorm:"VARCHAR(16)   NOT NULL"`
     CronDesc   string `xorm:"VARCHAR(1024)"`
+    CronHx     string `xorm:"VARCHAR(1024)"`
 }
 
 /*

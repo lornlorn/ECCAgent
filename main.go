@@ -1,7 +1,6 @@
 package main
 
 import (
-    "app/httpsvr"
     "app/scheduler"
     "github.com/cihub/seelog"
     "log"
@@ -65,8 +64,9 @@ func main() {
         panic("Exit!")
     }
     seelog.Infof("%v Success !", msg)
-    //scheduler.Cron.Wait()
+    scheduler.Cron.Wait()
 
+    /*
     // Start HTTP Server
     msg = "5 -> Starting HTTP Server"
     seelog.Infof("%v !", msg)
@@ -81,4 +81,6 @@ func main() {
         panic("Exit!")
     }
     seelog.Infof("%v Success !", msg)
+
+     */
 }

@@ -8,12 +8,14 @@ import (
     "encoding/base64"
     "encoding/hex"
     "encoding/json"
+    "fmt"
     "io"
     "io/ioutil"
+    "math/big"
+    mrand "math/rand"
     "os"
     "strings"
     "time"
-    mrand "math/rand"
 
     "github.com/cihub/seelog"
     "github.com/tidwall/gjson"
@@ -159,4 +161,32 @@ func RandString(len int) string {
         bytes[i] = byte(b)
     }
     return string(bytes)
+}
+
+// RandomString 生成随机字符串 不使用time函数
+func RandomString(len int) string {
+    var str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+    var container string
+
+    b := bytes.NewBufferString(str)
+    length := b.Len()
+    bigInt := big.NewInt(int64(length))
+    for i:=0;i<len;i++{
+        randomInt,_ := rand.Int(rand.Reader,bigInt)
+        container += string(str[randomInt.Int64()])
+    }
+    return container
+}
+
+// RandomNumber 生成随机数字字符串 不使用time函数
+func RandomNumber(len int) string {
+    var numbers = []byte{1,2,3,4,5,6,7,8,9,0}
+    var container string
+
+    length := bytes.NewReader(numbers).Len()
+    for i:=1;i<=len;i++{
+        random,_:=rand.Int(rand.Reader,big.NewInt(int64(length)))
+        container += fmt.Sprintf("%d",numbers[random.Int64()])
+    }
+    return container
 }
