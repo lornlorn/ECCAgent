@@ -1,13 +1,11 @@
 package scheduler
 
 import (
-    "bytes"
     "fmt"
     "github.com/cihub/seelog"
     "golang.org/x/crypto/ssh"
     "io/ioutil"
     "net"
-    "strings"
     "time"
 )
 
@@ -44,7 +42,7 @@ func SSHConnect(user string, password string, host string, port int, key string)
     clientConfig = &ssh.ClientConfig{
         User:    user,
         Auth:    auth,
-        Timeout: 10 * time.Second,
+        Timeout: 30 * time.Second,
         Config:  config,
         HostKeyCallback: func(hostname string, remote net.Addr, key ssh.PublicKey) error {
             return nil
@@ -62,12 +60,28 @@ func SSHConnect(user string, password string, host string, port int, key string)
         return nil, err
     }
 
+    /*
+       // Get term size
+       fd := int(os.Stdin.Fd())
+       oldState, err := terminal.MakeRaw(fd)
+       if err != nil {
+           panic(err)
+       }
+       defer terminal.Restore(fd, oldState)
+       termWidth, termHeight, err := terminal.GetSize(fd)
+       if err != nil {
+           panic(err)
+       }
+
+    */
     modes := ssh.TerminalModes{
-        ssh.ECHO:          0,
+        ssh.ECHO:          1,
         ssh.TTY_OP_ISPEED: 14400,
         ssh.TTY_OP_OSPEED: 14400,
     }
-    if err := session.RequestPty("xterm", 80, 40, modes); err != nil {
+    termHeight := 80
+    termWidth := 80
+    if err := session.RequestPty("xterm", termHeight, termWidth, modes); err != nil {
         return nil, err
     }
 
@@ -83,31 +97,37 @@ func SSHRun(cmdstr string) {
     }
     defer session.Close()
 
-    cmdlist := strings.Split(cmdstr, ";")
-    stdinBuf, err := session.StdinPipe()
-    if err != nil {
-        seelog.Error(err.Error())
-        return
-    }
+    buf, err := session.CombinedOutput(cmdstr)
+    seelog.Debug(string(buf))
 
-    var outbt, errbt bytes.Buffer
-    session.Stdout = &outbt
-    session.Stderr = &errbt
+    /*
+       cmdlist := strings.Split(cmdstr, ";")
+       stdinBuf, err := session.StdinPipe()
+       if err != nil {
+           seelog.Error(err.Error())
+           return
+       }
 
-    err = session.Shell()
-    if err != nil {
-        seelog.Error(err.Error())
-        return
-    }
+       var outbt, errbt bytes.Buffer
+       session.Stdout = &outbt
+       session.Stderr = &errbt
 
-    for _, cmd := range cmdlist {
-        cmd = cmd + "\n"
-        stdinBuf.Write([]byte(cmd))
-    }
-    session.Wait()
+       err = session.Shell()
+       if err != nil {
+           seelog.Error(err.Error())
+           return
+       }
 
-    seelog.Trace(outbt.String())
-    seelog.Trace(errbt.String())
-    //return
+       for _, cmd := range cmdlist {
+           stdinBuf.Write([]byte(cmd + "\n"))
+       }
+       stdinBuf.Close()
+       session.Wait()
+
+       seelog.Trace(outbt.String())
+       seelog.Trace(errbt.String())
+       //return
+
+    */
     seelog.Trace("finish...")
 }
