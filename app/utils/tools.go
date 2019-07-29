@@ -171,8 +171,8 @@ func RandomString(len int) string {
     b := bytes.NewBufferString(str)
     length := b.Len()
     bigInt := big.NewInt(int64(length))
-    for i:=0;i<len;i++{
-        randomInt,_ := rand.Int(rand.Reader,bigInt)
+    for i := 0; i < len; i++ {
+        randomInt, _ := rand.Int(rand.Reader, bigInt)
         container += string(str[randomInt.Int64()])
     }
     return container
@@ -180,13 +180,13 @@ func RandomString(len int) string {
 
 // RandomNumber 生成随机数字字符串 不使用time函数
 func RandomNumber(len int) string {
-    var numbers = []byte{1,2,3,4,5,6,7,8,9,0}
+    var numbers = []byte{1, 2, 3, 4, 5, 6, 7, 8, 9, 0}
     var container string
 
     length := bytes.NewReader(numbers).Len()
-    for i:=1;i<=len;i++{
-        random,_:=rand.Int(rand.Reader,big.NewInt(int64(length)))
-        container += fmt.Sprintf("%d",numbers[random.Int64()])
+    for i := 1; i <= len; i++ {
+        random, _ := rand.Int(rand.Reader, big.NewInt(int64(length)))
+        container += fmt.Sprintf("%d", numbers[random.Int64()])
     }
     return container
 }

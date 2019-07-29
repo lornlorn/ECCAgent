@@ -67,20 +67,20 @@ func main() {
     scheduler.Cron.Wait()
 
     /*
-    // Start HTTP Server
-    msg = "5 -> Starting HTTP Server"
-    seelog.Infof("%v !", msg)
-    seelog.Info("***Everything is OK !***")
-    // log.Fatalln(httpsvr.StartHTTP())
-    httpPort := utils.GetConfigInt("http", "httpport")
-    writeTimeout := utils.GetConfigInt("http", "writetimeout")
-    readTimeout := utils.GetConfigInt("http", "readtimeout")
-    err = httpsvr.StartHTTP(httpPort, writeTimeout, readTimeout)
-    if err != nil {
-        seelog.Criticalf("%v Error : %v", msg, err)
-        panic("Exit!")
-    }
-    seelog.Infof("%v Success !", msg)
+       // Start HTTP Server
+       msg = "5 -> Starting HTTP Server"
+       seelog.Infof("%v !", msg)
+       seelog.Info("***Everything is OK !***")
+       // log.Fatalln(httpsvr.StartHTTP())
+       httpPort := utils.GetConfigInt("http", "httpport")
+       writeTimeout := utils.GetConfigInt("http", "writetimeout")
+       readTimeout := utils.GetConfigInt("http", "readtimeout")
+       err = httpsvr.StartHTTP(httpPort, writeTimeout, readTimeout)
+       if err != nil {
+           seelog.Criticalf("%v Error : %v", msg, err)
+           panic("Exit!")
+       }
+       seelog.Infof("%v Success !", msg)
 
-     */
+    */
 }

@@ -76,7 +76,7 @@ func SSHConnect(user string, password string, host string, port int, key string)
 
 func SSHRun(cmdstr string) {
     seelog.Debugf("SSHRun...%v", cmdstr)
-    session, err := SSHConnect("pcmsapp", "", "21.123.42.99", 22, "E:\\diaol\\5193139_D4-004")
+    session, err := SSHConnect("root", "", "ecsgn.raydio.site", 22, "F:\\WorkSpace\\id_rsa")
     if err != nil {
         seelog.Error(err.Error())
         return
