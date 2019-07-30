@@ -2,8 +2,6 @@ package scheduler
 
 import (
     "app/models"
-    "strings"
-
     "github.com/cihub/seelog"
     "github.com/rfyiamcool/cronlib"
 )
@@ -28,6 +26,9 @@ func InitCron() error {
         cronType := v.CronType
         cronSpec := v.CronSpec
         //cronEnvs := strings.Split(v.CronEnvs, " ")
+        cronHost := v.CronHost
+        cronAuth := v.CronAuth
+        cronPrivkey := v.CronPrivkey
         cronCmd := v.CronCmd
         //cronArgs := strings.Split(v.CronArgs, " ")
         cronHx := v.CronHx
@@ -41,7 +42,7 @@ func InitCron() error {
                 cronSpec,
                 func() {
                     //Execute("cron", "", cronCmd, cronEnvs, cronArgs...)
-                    SSHRun(cronCmd)
+                    SSHRun(cronHost, cronAuth, cronPrivkey, cronCmd, cronHx, cronName)
                 },
                 cronlib.AsyncMode(),
             )
@@ -62,7 +63,7 @@ func InitCron() error {
             job, err := cronlib.NewJobModel(
                 cronSpec,
                 func() {
-                    CheckUrl("GET", cronCmd, nil, cronHx)
+                    CheckUrl("GET", cronCmd, cronHx)
                 },
                 cronlib.AsyncMode(),
             )
@@ -112,9 +113,11 @@ func AddCronJob(cron models.NewCron) error {
     seelog.Debugf("Set New Job : %v", cron)
     cronName := cron.CronName
     cronSpec := cron.CronSpec
-    cronEnvs := strings.Split(cron.CronEnvs, " ")
+    //cronEnvs := strings.Split(cron.CronEnvs, " ")
+    var cronEnvs []string
     cronCmd := cron.CronCmd
-    cronArgs := strings.Split(cron.CronArgs, " ")
+    //cronArgs := strings.Split(cron.CronArgs, " ")
+    var cronArgs []string
     //cronUuid := cron.CronUuid
 
     job, err := cronlib.NewJobModel(
@@ -159,9 +162,10 @@ func UpdateCronJob(cron models.NewCron) error {
     seelog.Debugf("Update Job : %v", cron)
     cronName := cron.CronName
     cronSpec := cron.CronSpec
-    cronEnvs := strings.Split(cron.CronEnvs, " ")
+    var cronEnvs []string
     cronCmd := cron.CronCmd
-    cronArgs := strings.Split(cron.CronArgs, " ")
+    //cronArgs := strings.Split(cron.CronArgs, " ")
+    var cronArgs []string
     //cronUuid := cron.CronUuid
 
     job, err := cronlib.NewJobModel(

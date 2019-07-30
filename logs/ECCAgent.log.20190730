@@ -1,0 +1,35 @@
+2019-07-30 15:49:40 [Info] [main.go:40] [main.main] Initialize Logger ... Success !
+2019-07-30 15:49:40 [Info] [main.go:49] [main.main] Load Configuration ... Success !
+2019-07-30 15:49:40 [Debug] [app/utils/dbController.go:22] [app/utils.InitDB] Database Type : [sqlite3], Connect String : [./data/database/eccagent.db]
+2019-07-30 15:49:40 [Info] [main.go:61] [main.main] Connect Database ... Success !
+2019-07-30 15:49:40 [Debug] [app/scheduler/cron.go:25] [app/scheduler.InitCron] Cron Job 0 : {11111 ecsgn.raydio.site SSH */30 * * * * * ecsgn.raydio.site:22 root/P@ssw0rd01! F:\\WorkSpace\\id_rsa /root/test.sh 启用 ecsgn.raydio.site 5193139}
+2019-07-30 15:49:40 [Trace] [app/scheduler/cron.go:47] [app/scheduler.InitCron] SSH
+2019-07-30 15:49:40 [Info] [main.go:67] [main.main] Start Cron ... Success !
+2019-07-30 15:50:00 [Debug] [app/scheduler/ssh.go:95] [app/scheduler.SSHRun] SSHRun...F:\\WorkSpace\\id_rsa
+2019-07-30 15:50:00 [Error] [app/scheduler/ssh.go:102] [app/scheduler.SSHRun] open /root/test.sh: The system cannot find the path specified.
+2019-07-30 15:50:30 [Debug] [app/scheduler/ssh.go:95] [app/scheduler.SSHRun] SSHRun...F:\\WorkSpace\\id_rsa
+2019-07-30 15:50:30 [Error] [app/scheduler/ssh.go:102] [app/scheduler.SSHRun] open /root/test.sh: The system cannot find the path specified.
+2019-07-30 15:51:00 [Debug] [app/scheduler/ssh.go:95] [app/scheduler.SSHRun] SSHRun...F:\\WorkSpace\\id_rsa
+2019-07-30 15:51:00 [Error] [app/scheduler/ssh.go:102] [app/scheduler.SSHRun] open /root/test.sh: The system cannot find the path specified.
+2019-07-30 15:51:30 [Debug] [app/scheduler/ssh.go:95] [app/scheduler.SSHRun] SSHRun...F:\\WorkSpace\\id_rsa
+2019-07-30 15:51:30 [Error] [app/scheduler/ssh.go:102] [app/scheduler.SSHRun] open /root/test.sh: The system cannot find the path specified.
+2019-07-30 15:51:47 [Info] [main.go:40] [main.main] Initialize Logger ... Success !
+2019-07-30 15:51:47 [Info] [main.go:49] [main.main] Load Configuration ... Success !
+2019-07-30 15:51:47 [Debug] [app/utils/dbController.go:22] [app/utils.InitDB] Database Type : [sqlite3], Connect String : [./data/database/eccagent.db]
+2019-07-30 15:51:47 [Info] [main.go:61] [main.main] Connect Database ... Success !
+2019-07-30 15:51:47 [Debug] [app/scheduler/cron.go:25] [app/scheduler.InitCron] Cron Job 0 : {11111 ecsgn.raydio.site SSH */30 * * * * * ecsgn.raydio.site:22 root/P@ssw0rd01! F:\\WorkSpace\\id_rsa /root/test.sh 启用 ecsgn.raydio.site 5193139}
+2019-07-30 15:51:47 [Trace] [app/scheduler/cron.go:47] [app/scheduler.InitCron] SSH
+2019-07-30 15:51:47 [Info] [main.go:67] [main.main] Start Cron ... Success !
+2019-07-30 15:52:00 [Debug] [app/scheduler/ssh.go:95] [app/scheduler.SSHRun] SSHRun.../root/test.sh
+2019-07-30 15:52:00 [Error] [app/scheduler/ssh.go:102] [app/scheduler.SSHRun] open F:\\WorkSpace\\id_rsa: The system cannot find the file specified.
+2019-07-30 15:52:30 [Debug] [app/scheduler/ssh.go:95] [app/scheduler.SSHRun] SSHRun.../root/test.sh
+2019-07-30 15:52:30 [Error] [app/scheduler/ssh.go:102] [app/scheduler.SSHRun] open F:\\WorkSpace\\id_rsa: The system cannot find the file specified.
+2019-07-30 15:53:27 [Info] [main.go:40] [main.main] Initialize Logger ... Success !
+2019-07-30 15:53:27 [Info] [main.go:49] [main.main] Load Configuration ... Success !
+2019-07-30 15:53:27 [Debug] [app/utils/dbController.go:22] [app/utils.InitDB] Database Type : [sqlite3], Connect String : [./data/database/eccagent.db]
+2019-07-30 15:53:27 [Info] [main.go:61] [main.main] Connect Database ... Success !
+2019-07-30 15:53:27 [Debug] [app/scheduler/cron.go:25] [app/scheduler.InitCron] Cron Job 0 : {11111 ecsgn.raydio.site SSH */30 * * * * * ecsgn.raydio.site:22 root/P@ssw0rd01! F:\\WorkSpace\\id_rsa /root/test.sh 启用 ecsgn.raydio.site 5193139}
+2019-07-30 15:53:27 [Trace] [app/scheduler/cron.go:47] [app/scheduler.InitCron] SSH
+2019-07-30 15:53:27 [Info] [main.go:67] [main.main] Start Cron ... Success !
+2019-07-30 15:53:30 [Debug] [app/scheduler/ssh.go:95] [app/scheduler.SSHRun] SSHRun...ecsgn.raydio.site
+2019-07-30 15:53:30 [Error] [app/scheduler/ssh.go:102] [app/scheduler.SSHRun] open F:\\WorkSpace\\id_rsa: The system cannot find the file specified.

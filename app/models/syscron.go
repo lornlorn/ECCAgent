@@ -11,31 +11,33 @@ import (
 SysCron struct map to table sys_cron
 */
 type SysCron struct {
-    CronId     int    `xorm:"INTEGER NOT NULL UNIQUE PK"`
-    CronName   string `xorm:"VARCHAR(256) NOT NULL UNIQUE"`
-    CronType   string `xorm:"VARCHAR(16) NOT NULL"`
-    CronSpec   string `xorm:"VARCHAR(128) NOT NULL"`
-    CronEnvs   string `xorm:"VARCHAR(512)"`
-    CronCmd    string `xorm:"VARCHAR(512)   NOT NULL"`
-    CronArgs   string `xorm:"VARCHAR(512)"`
-    CronStatus string `xorm:"VARCHAR(16)   NOT NULL"`
-    CronDesc   string `xorm:"VARCHAR(1024)"`
-    CronHx     string `xorm:"VARCHAR(1024)"`
+    CronId      int    `xorm:"INTEGER NOT NULL UNIQUE PK"`
+    CronName    string `xorm:"VARCHAR(256) NOT NULL UNIQUE"`
+    CronType    string `xorm:"VARCHAR(16) NOT NULL"`
+    CronSpec    string `xorm:"VARCHAR(128) NOT NULL"`
+    CronHost    string `xorm:"VARCHAR(512)"`
+    CronAuth    string `xorm:"VARCHAR(512)"`
+    CronPrivkey string `xorm:"VARCHAR(512)"`
+    CronCmd     string `xorm:"VARCHAR(512)   NOT NULL"`
+    CronStatus  string `xorm:"VARCHAR(16)   NOT NULL"`
+    CronDesc    string `xorm:"VARCHAR(1024)"`
+    CronHx      string `xorm:"VARCHAR(1024)"`
 }
 
 /*
 NewCron struct map to table sys_cron without column Id
 */
 type NewCron struct {
-    CronName   string `xorm:"VARCHAR(256) NOT NULL UNIQUE"`
-    CronType   string `xorm:"VARCHAR(16) NOT NULL"`
-    CronSpec   string `xorm:"VARCHAR(128) NOT NULL"`
-    CronEnvs   string `xorm:"VARCHAR(512)"`
-    CronCmd    string `xorm:"VARCHAR(512)   NOT NULL"`
-    CronArgs   string `xorm:"VARCHAR(512)"`
-    CronStatus string `xorm:"VARCHAR(16)   NOT NULL"`
-    CronDesc   string `xorm:"VARCHAR(1024)"`
-    CronHx     string `xorm:"VARCHAR(1024)"`
+    CronName    string `xorm:"VARCHAR(256) NOT NULL UNIQUE"`
+    CronType    string `xorm:"VARCHAR(16) NOT NULL"`
+    CronSpec    string `xorm:"VARCHAR(128) NOT NULL"`
+    CronHost    string `xorm:"VARCHAR(512)"`
+    CronAuth    string `xorm:"VARCHAR(512)"`
+    CronPrivkey string `xorm:"VARCHAR(512)"`
+    CronCmd     string `xorm:"VARCHAR(512)   NOT NULL"`
+    CronStatus  string `xorm:"VARCHAR(16)   NOT NULL"`
+    CronDesc    string `xorm:"VARCHAR(1024)"`
+    CronHx      string `xorm:"VARCHAR(1024)"`
 }
 
 /*

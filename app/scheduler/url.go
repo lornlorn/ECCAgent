@@ -12,7 +12,7 @@ import (
 /*
 CheckUrl func(ip string, data []byte) ([]byte, error)
 */
-func CheckUrl(method string, url string, data []byte, hxTos string) ([]byte, error) {
+func CheckUrl(method string, url string, hxTos string) ([]byte, error) {
     // Client http.Client
     var Client *http.Client
     //seelog.Info("InitClient begin ...")
@@ -20,9 +20,9 @@ func CheckUrl(method string, url string, data []byte, hxTos string) ([]byte, err
     jar, _ := cookiejar.New(nil)
     Client.Jar = jar
 
-    //data := map[string][]string{}
+    var data string
 
-    req, err := http.NewRequest(method, url, strings.NewReader(string(data)))
+    req, err := http.NewRequest(method, url, strings.NewReader(data))
     if err != nil {
         seelog.Errorf("ERROR : %v", err.Error())
         return nil, err

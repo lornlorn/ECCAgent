@@ -1,18 +1,18 @@
 package scheduler
 
 import (
-    "fmt"
+    "app/udfuncs"
     "github.com/cihub/seelog"
     "golang.org/x/crypto/ssh"
     "io/ioutil"
     "net"
-    "time"
+    "strings"
 )
 
-func SSHConnect(user string, password string, host string, port int, key string) (*ssh.Session, error) {
+func SSHConnect(host string, user string, password string, key string) (*ssh.Session, error) {
     var (
-        auth         []ssh.AuthMethod
-        addr         string
+        auth []ssh.AuthMethod
+        //addr         string
         clientConfig *ssh.ClientConfig
         client       *ssh.Client
         config       ssh.Config
@@ -40,9 +40,10 @@ func SSHConnect(user string, password string, host string, port int, key string)
     }
 
     clientConfig = &ssh.ClientConfig{
-        User:    user,
-        Auth:    auth,
-        Timeout: 30 * time.Second,
+        User: user,
+        Auth: auth,
+        //Timeout: 60 * time.Second,
+        Timeout: 0,
         Config:  config,
         HostKeyCallback: func(hostname string, remote net.Addr, key ssh.PublicKey) error {
             return nil
@@ -50,9 +51,9 @@ func SSHConnect(user string, password string, host string, port int, key string)
         //HostKeyCallback: ssh.InsecureIgnoreHostKey(),
     }
 
-    addr = fmt.Sprintf("%s:%d", host, port)
+    //addr = fmt.Sprintf("%s:%d", host, port)
 
-    if client, err = ssh.Dial("tcp", addr, clientConfig); err != nil {
+    if client, err = ssh.Dial("tcp", host, clientConfig); err != nil {
         return nil, err
     }
 
@@ -88,9 +89,14 @@ func SSHConnect(user string, password string, host string, port int, key string)
     return session, nil
 }
 
-func SSHRun(cmdstr string) {
-    seelog.Debugf("SSHRun...%v", cmdstr)
-    session, err := SSHConnect("root", "", "ecsgn.raydio.site", 22, "F:\\WorkSpace\\id_rsa")
+func SSHRun(host string, auth string, privkey string, cmdstr string, hxTos string, cronName string) {
+    seelog.Debugf("SSHRun...%v", cronName)
+
+    userInfo := strings.Split(auth, "/")
+    user := userInfo[0]
+    password := userInfo[1]
+
+    session, err := SSHConnect(host, user, password, privkey)
     if err != nil {
         seelog.Error(err.Error())
         return
@@ -129,5 +135,8 @@ func SSHRun(cmdstr string) {
        //return
 
     */
+
+    udfuncs.SendHXMsg(cronName, hxTos, string(buf))
+
     seelog.Trace("finish...")
 }
