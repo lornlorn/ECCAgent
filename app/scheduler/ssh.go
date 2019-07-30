@@ -89,7 +89,7 @@ func SSHConnect(host string, user string, password string, key string) (*ssh.Ses
     return session, nil
 }
 
-func SSHRun(host string, auth string, privkey string, cmdstr string, hxTos string, cronName string) {
+func SSHRun(host string, auth string, privkey string, cmdstr string, hxTos string, cronName string) error {
     seelog.Debugf("SSHRun...%v", cronName)
 
     userInfo := strings.Split(auth, "/")
@@ -98,12 +98,18 @@ func SSHRun(host string, auth string, privkey string, cmdstr string, hxTos strin
 
     session, err := SSHConnect(host, user, password, privkey)
     if err != nil {
-        seelog.Error(err.Error())
-        return
+        seelog.Errorf("ERROR : %v", err.Error())
+        udfuncs.SendHXMsg(cronName, hxTos, err.Error())
+        return err
     }
     defer session.Close()
 
     buf, err := session.CombinedOutput(cmdstr)
+    if err != nil {
+        seelog.Errorf("ERROR : %v", err.Error())
+        udfuncs.SendHXMsg(cronName, hxTos, err.Error())
+        return err
+    }
     seelog.Debug(string(buf))
 
     /*
@@ -139,4 +145,6 @@ func SSHRun(host string, auth string, privkey string, cmdstr string, hxTos strin
     udfuncs.SendHXMsg(cronName, hxTos, string(buf))
 
     seelog.Trace("finish...")
+
+    return nil
 }

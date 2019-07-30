@@ -79,6 +79,23 @@ func InitCron() error {
             }
         case "PORT":
             seelog.Trace("PORT")
+            job, err := cronlib.NewJobModel(
+                cronSpec,
+                func() {
+                    PortScan(cronCmd, cronHx)
+                },
+                cronlib.AsyncMode(),
+            )
+            if err != nil {
+                seelog.Errorf("Cron Set Fail : [%v]", cronName)
+                return err
+            }
+
+            err = Cron.Register(cronName, job)
+            if err != nil {
+                seelog.Errorf("Cron Register Error : %v", err.Error())
+                return err
+            }
         default: //default case
             seelog.Warn("incorrect cron type")
         }

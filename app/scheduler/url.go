@@ -2,8 +2,8 @@ package scheduler
 
 import (
     "app/udfuncs"
+    "fmt"
     "github.com/cihub/seelog"
-    "io/ioutil"
     "net/http"
     "net/http/cookiejar"
     "strings"
@@ -12,7 +12,7 @@ import (
 /*
 CheckUrl func(ip string, data []byte) ([]byte, error)
 */
-func CheckUrl(method string, url string, hxTos string) ([]byte, error) {
+func CheckUrl(method string, url string, hxTos string) error {
     // Client http.Client
     var Client *http.Client
     //seelog.Info("InitClient begin ...")
@@ -25,7 +25,7 @@ func CheckUrl(method string, url string, hxTos string) ([]byte, error) {
     req, err := http.NewRequest(method, url, strings.NewReader(data))
     if err != nil {
         seelog.Errorf("ERROR : %v", err.Error())
-        return nil, err
+        return err
     }
 
     header := map[string][]string{}
@@ -34,22 +34,28 @@ func CheckUrl(method string, url string, hxTos string) ([]byte, error) {
     res, err := Client.Do(req)
     if err != nil {
         seelog.Errorf("ERROR : %v", err.Error())
-        // HX
-        //tos := utils.GetConfig("hx", "tos")
         udfuncs.SendHXMsg("URL检查失败通知", hxTos, url)
-        return nil, err
+        return err
     }
     defer res.Body.Close()
 
-    body, err := ioutil.ReadAll(res.Body)
-    if err != nil {
-        seelog.Errorf("ERROR : %v", err.Error())
-        return nil, err
+    if res.StatusCode != 200 {
+        seelog.Warnf("%v响应码非200", url)
+        udfuncs.SendHXMsg("URL响应码异常通知", hxTos, fmt.Sprintf("%v [%v]", url, res.StatusCode))
     }
 
-    //seelog.Trace(string(body))
+    /*
+       body, err := ioutil.ReadAll(res.Body)
+       if err != nil {
+           seelog.Errorf("ERROR : %v", err.Error())
+           return nil, err
+       }
+
+       seelog.Trace(string(body))
+
+    */
 
     seelog.Infof(">>> Check [%v] Status Code : %v <<<", url, res.StatusCode)
 
-    return body, nil
+    return nil
 }
