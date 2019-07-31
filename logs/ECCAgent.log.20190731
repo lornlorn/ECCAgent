@@ -1,0 +1,51 @@
+2019-07-31 20:02:49 [Info] [main.go:40] [main.main] Initialize Logger ... Success !
+2019-07-31 20:02:49 [Info] [main.go:49] [main.main] Load Configuration ... Success !
+2019-07-31 20:02:49 [Debug] [app/utils/dbController.go:22] [app/utils.InitDB] Database Type : [sqlite3], Connect String : [./data/database/eccagent.db]
+2019-07-31 20:02:49 [Info] [main.go:61] [main.main] Connect Database ... Success !
+2019-07-31 20:02:49 [Debug] [app/scheduler/cron.go:25] [app/scheduler.InitCron] Cron Job 0 : {99999 SCAN COMMAND LIST SCAN */10 * * * * * ecsgn.raydio.site:21 root/P@ssw0rd01!  /root/cmdlist.txt 启用 SCAN COMMAND LIST 5193139}
+2019-07-31 20:02:49 [Trace] [app/scheduler/cron.go:38] [app/scheduler.InitCron] SCAN
+2019-07-31 20:02:49 [Info] [main.go:67] [main.main] Start Cron ... Success !
+2019-07-31 21:27:26 [Info] [main.go:40] [main.main] Initialize Logger ... Success !
+2019-07-31 21:27:26 [Info] [main.go:49] [main.main] Load Configuration ... Success !
+2019-07-31 21:27:26 [Debug] [app/utils/dbController.go:22] [app/utils.InitDB] Database Type : [sqlite3], Connect String : [./data/database/eccagent.db]
+2019-07-31 21:27:26 [Info] [main.go:61] [main.main] Connect Database ... Success !
+2019-07-31 21:27:26 [Debug] [app/scheduler/cron.go:25] [app/scheduler.InitCron] Cron Job 0 : {5555 http://localhost:5555/test URL */30 * * * * *    http://localhost:5555/test 启用 http://localhost:5555/test 5193139|5193139}
+2019-07-31 21:27:26 [Trace] [app/scheduler/cron.go:68] [app/scheduler.InitCron] URL
+2019-07-31 21:27:26 [Debug] [app/scheduler/cron.go:25] [app/scheduler.InitCron] Cron Job 1 : {11111 ecsgn.raydio.site SSH */30 * * * * * ecsgn.raydio.site:22 root/P@ssw0rd01! F:\\WorkSpace\\id_rsa /root/test.sh 启用 ecsgn.raydio.site 5193139}
+2019-07-31 21:27:26 [Trace] [app/scheduler/cron.go:47] [app/scheduler.InitCron] SSH
+2019-07-31 21:27:26 [Debug] [app/scheduler/cron.go:25] [app/scheduler.InitCron] Cron Job 2 : {22222 ecsgn.raydio.site:9999 PORT */30 * * * * *    ecsgn.raydio.site:9999 启用 ecsgn.raydio.site:9999 5193139}
+2019-07-31 21:27:26 [Trace] [app/scheduler/cron.go:87] [app/scheduler.InitCron] PORT
+2019-07-31 21:27:26 [Debug] [app/scheduler/cron.go:25] [app/scheduler.InitCron] Cron Job 3 : {99999 SCAN COMMAND LIST SCAN */10 * * * * * ecsgn.raydio.site:21 root/P@ssw0rd01!  /root/cmdlist.txt 启用 SCAN COMMAND LIST 5193139}
+2019-07-31 21:27:26 [Trace] [app/scheduler/cron.go:38] [app/scheduler.InitCron] SCAN
+2019-07-31 21:27:26 [Info] [main.go:67] [main.main] Start Cron ... Success !
+2019-07-31 21:27:30 [Debug] [app/scheduler/ssh.go:95] [app/scheduler.SSHRun] SSHRun...ecsgn.raydio.site
+2019-07-31 21:27:30 [Error] [app/scheduler/ssh.go:102] [app/scheduler.SSHRun] ERROR : ssh: handshake failed: ssh: unable to authenticate, attempted methods [none publickey], no supported methods remain
+2019-07-31 21:27:30 [Debug] [app/utils/custom.go:62] [app/utils.SendHXMsg] title=ecsgn.raydio.site
+top=5193139
+content={
+[20190731212730]ssh: handshake failed: ssh: unable to authenticate, attempted methods [none publickey], no supported methods remain
+}END
+
+2019-07-31 21:27:30 [Debug] [app/utils/custom.go:70] [app/utils.SendHXMsg] 通知消息文件已生成[./data/msgfile/2mMxhTNrxW_20190731212730.dat] ...
+2019-07-31 21:27:32 [Error] [app/scheduler/url.go:37] [app/scheduler.CheckUrl] ERROR : Get http://localhost:5555/test: dial tcp [::1]:5555: connectex: No connection could be made because the target machine actively refused it.
+2019-07-31 21:27:32 [Debug] [app/utils/custom.go:62] [app/utils.SendHXMsg] title=URL检查失败通知
+top=5193139|5193139
+content={
+[20190731212732]http://localhost:5555/test
+}END
+
+2019-07-31 21:27:32 [Debug] [app/utils/custom.go:70] [app/utils.SendHXMsg] 通知消息文件已生成[./data/msgfile/cUVVeVRhDy_20190731212732.dat] ...
+2019-07-31 21:27:35 [Error] [app/scheduler/port.go:14] [app/scheduler.PortScan] ERROR : dial tcp 39.98.47.143:9999: i/o timeout
+2019-07-31 21:27:35 [Debug] [app/utils/custom.go:62] [app/utils.SendHXMsg] title=端口探测失败通知
+top=5193139
+content={
+[20190731212735]ecsgn.raydio.site:9999
+}END
+
+2019-07-31 21:27:35 [Debug] [app/utils/custom.go:70] [app/utils.SendHXMsg] 通知消息文件已生成[./data/msgfile/FcyFkXpge6_20190731212735.dat] ...
+2019-07-31 21:27:35 [Error] [app/utils/custom.go:95] [app/utils.ftpMsgFile] ERROR : dial tcp 22.122.18.110:21: i/o timeout
+2019-07-31 21:27:35 [Error] [app/utils/custom.go:73] [app/utils.SendHXMsg] ERROR : dial tcp 22.122.18.110:21: i/o timeout
+2019-07-31 21:27:37 [Error] [app/utils/custom.go:95] [app/utils.ftpMsgFile] ERROR : dial tcp 22.122.18.110:21: i/o timeout
+2019-07-31 21:27:37 [Error] [app/utils/custom.go:73] [app/utils.SendHXMsg] ERROR : dial tcp 22.122.18.110:21: i/o timeout
+2019-07-31 21:27:40 [Error] [app/utils/custom.go:95] [app/utils.ftpMsgFile] ERROR : dial tcp 22.122.18.110:21: i/o timeout
+2019-07-31 21:27:40 [Error] [app/utils/custom.go:73] [app/utils.SendHXMsg] ERROR : dial tcp 22.122.18.110:21: i/o timeout

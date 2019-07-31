@@ -2,7 +2,6 @@ package scheduler
 
 import (
     "app/models"
-    "app/udfuncs"
     "app/utils"
     "fmt"
     "os/exec"
@@ -46,7 +45,7 @@ func Execute(src string, uuid string, command string, envs []string, args ...str
     }
     seelog.Trace(string(result))
 
-    logFilePath, err := udfuncs.WriteRunLog2File(uuid, result, beginTimeStr, endTimeStr)
+    logFilePath, err := utils.WriteRunLog2File(uuid, result, beginTimeStr, endTimeStr)
     if err != nil {
         seelog.Errorf("Write Run Log Fail : %v", err.Error())
         sysLog.LogfilePath = fmt.Sprintf("Write Run Log Fail : %v", err.Error())

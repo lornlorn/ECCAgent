@@ -20,38 +20,26 @@ func InitCron() error {
     }
 
     // seelog.Debug(crons)
-    for i, v := range crons {
-        seelog.Debugf("Cron Job %v : %v", i, v)
-        cronName := v.CronName
-        cronType := v.CronType
-        cronSpec := v.CronSpec
-        //cronEnvs := strings.Split(v.CronEnvs, " ")
-        cronHost := v.CronHost
-        cronAuth := v.CronAuth
-        cronPrivkey := v.CronPrivkey
-        cronCmd := v.CronCmd
-        //cronArgs := strings.Split(v.CronArgs, " ")
-        cronHx := v.CronHx
+    for idx, cron := range crons {
+        seelog.Debugf("Cron Job %v : %v", idx, cron)
 
-        //var job *cronlib.JobModel
-
-        switch cronType { //finger is declared in switch
+        switch cron.CronType { //finger is declared in switch
         case "SSH":
             seelog.Trace("SSH")
             job, err := cronlib.NewJobModel(
-                cronSpec,
+                cron.CronSpec,
                 func() {
                     //Execute("cron", "", cronCmd, cronEnvs, cronArgs...)
-                    SSHRun(cronHost, cronAuth, cronPrivkey, cronCmd, cronHx, cronName)
+                    SSHRun(cron)
                 },
                 cronlib.AsyncMode(),
             )
             if err != nil {
-                seelog.Errorf("Cron Set Fail : [%v]", cronName)
+                seelog.Errorf("Cron Set Fail : [%v]", cron.CronName)
                 return err
             }
 
-            err = Cron.Register(cronName, job)
+            err = Cron.Register(cron.CronName, job)
             if err != nil {
                 seelog.Errorf("Cron Register Error : %v", err.Error())
                 return err
@@ -61,18 +49,18 @@ func InitCron() error {
         case "URL":
             seelog.Trace("URL")
             job, err := cronlib.NewJobModel(
-                cronSpec,
+                cron.CronSpec,
                 func() {
-                    CheckUrl("GET", cronCmd, cronHx)
+                    CheckUrl(cron)
                 },
                 cronlib.AsyncMode(),
             )
             if err != nil {
-                seelog.Errorf("Cron Set Fail : [%v]", cronName)
+                seelog.Errorf("Cron Set Fail : [%v]", cron.CronName)
                 return err
             }
 
-            err = Cron.Register(cronName, job)
+            err = Cron.Register(cron.CronName, job)
             if err != nil {
                 seelog.Errorf("Cron Register Error : %v", err.Error())
                 return err
@@ -80,43 +68,28 @@ func InitCron() error {
         case "PORT":
             seelog.Trace("PORT")
             job, err := cronlib.NewJobModel(
-                cronSpec,
+                cron.CronSpec,
                 func() {
-                    PortScan(cronCmd, cronHx)
+                    PortScan(cron)
                 },
                 cronlib.AsyncMode(),
             )
             if err != nil {
-                seelog.Errorf("Cron Set Fail : [%v]", cronName)
+                seelog.Errorf("Cron Set Fail : [%v]", cron.CronName)
                 return err
             }
 
-            err = Cron.Register(cronName, job)
+            err = Cron.Register(cron.CronName, job)
             if err != nil {
                 seelog.Errorf("Cron Register Error : %v", err.Error())
                 return err
             }
+        case "SCAN":
+            seelog.Trace("SCAN")
+
         default: //default case
             seelog.Warn("incorrect cron type")
         }
-
-        //job, err := cronlib.NewJobModel(
-        //    cronSpec,
-        //    func() {
-        //        Execute("cron", cronUuid, cronCmd, cronEnvs, cronArgs...)
-        //    },
-        //    cronlib.AsyncMode(),
-        //)
-        //if err != nil {
-        //    seelog.Errorf("Cron Set Fail : [%v]", cronName)
-        //    return err
-        //}
-        //
-        //err = Cron.Register(cronName, job)
-        //if err != nil {
-        //    seelog.Errorf("Cron Register Error : %v", err.Error())
-        //    return err
-        //}
     }
 
     Cron.Start()

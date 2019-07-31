@@ -1,7 +1,7 @@
 package scheduler
 
 import (
-    "app/udfuncs"
+    "app/utils"
     "github.com/cihub/seelog"
     "net"
     "time"
@@ -11,7 +11,7 @@ func PortScan(dest string, hxTos string) error {
     conn, err := net.DialTimeout("tcp", dest, 5*time.Second)
     if err != nil {
         seelog.Errorf("ERROR : %v", err.Error())
-        udfuncs.SendHXMsg("端口探测失败通知", hxTos, dest)
+        utils.SendHXMsg("端口探测失败通知", hxTos, dest)
         return err
     }
     defer conn.Close()

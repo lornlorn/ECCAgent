@@ -1,7 +1,8 @@
 package scheduler
 
 import (
-    "app/udfuncs"
+    "app/models"
+    "app/utils"
     "github.com/cihub/seelog"
     "golang.org/x/crypto/ssh"
     "io/ioutil"
@@ -89,8 +90,9 @@ func SSHConnect(host string, user string, password string, key string) (*ssh.Ses
     return session, nil
 }
 
-func SSHRun(host string, auth string, privkey string, cmdstr string, hxTos string, cronName string) error {
-    seelog.Debugf("SSHRun...%v", cronName)
+//func SSHRun(host string, auth string, privkey string, cmdstr string, hxTos string, cronName string) error {
+func SSHRun(cron models.SysCron) error {
+    seelog.Debugf("SSHRun...%v", cron.CronName)
 
     userInfo := strings.Split(auth, "/")
     user := userInfo[0]
@@ -99,7 +101,7 @@ func SSHRun(host string, auth string, privkey string, cmdstr string, hxTos strin
     session, err := SSHConnect(host, user, password, privkey)
     if err != nil {
         seelog.Errorf("ERROR : %v", err.Error())
-        udfuncs.SendHXMsg(cronName, hxTos, err.Error())
+        utils.SendHXMsg(cronName, hxTos, err.Error())
         return err
     }
     defer session.Close()
@@ -107,7 +109,7 @@ func SSHRun(host string, auth string, privkey string, cmdstr string, hxTos strin
     buf, err := session.CombinedOutput(cmdstr)
     if err != nil {
         seelog.Errorf("ERROR : %v", err.Error())
-        udfuncs.SendHXMsg(cronName, hxTos, err.Error())
+        utils.SendHXMsg(cronName, hxTos, err.Error())
         return err
     }
     seelog.Debug(string(buf))
@@ -142,7 +144,7 @@ func SSHRun(host string, auth string, privkey string, cmdstr string, hxTos strin
 
     */
 
-    udfuncs.SendHXMsg(cronName, hxTos, string(buf))
+    utils.SendHXMsg(cronName, hxTos, string(buf))
 
     seelog.Trace("finish...")
 

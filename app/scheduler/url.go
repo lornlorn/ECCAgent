@@ -1,7 +1,7 @@
 package scheduler
 
 import (
-    "app/udfuncs"
+    "app/utils"
     "fmt"
     "github.com/cihub/seelog"
     "net/http"
@@ -34,14 +34,14 @@ func CheckUrl(method string, url string, hxTos string) error {
     res, err := Client.Do(req)
     if err != nil {
         seelog.Errorf("ERROR : %v", err.Error())
-        udfuncs.SendHXMsg("URL检查失败通知", hxTos, url)
+        utils.SendHXMsg("URL检查失败通知", hxTos, url)
         return err
     }
     defer res.Body.Close()
 
     if res.StatusCode != 200 {
         seelog.Warnf("%v响应码非200", url)
-        udfuncs.SendHXMsg("URL响应码异常通知", hxTos, fmt.Sprintf("%v [%v]", url, res.StatusCode))
+        utils.SendHXMsg("URL响应码异常通知", hxTos, fmt.Sprintf("%v [%v]", url, res.StatusCode))
     }
 
     /*
