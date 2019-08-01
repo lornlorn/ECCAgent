@@ -105,12 +105,12 @@ func CronSSHRun(cron models.SysCron) error {
         user = userInfo[0]
         password = userInfo[1]
     } else {
-        seelog.Errorf("[%v]SSH Auth ERROR : [%v@%v]", UUID, cron.CronAuth, cron.CronHost)
+        seelog.Errorf("[%v]SSH->SSH Auth ERROR : [%v@%v]", UUID, cron.CronAuth, cron.CronHost)
     }
 
     session, err := SSHConnect(cron.CronHost, user, password, cron.CronPrivkey)
     if err != nil {
-        seelog.Errorf("[%v]ERROR : %v", UUID, err.Error())
+        seelog.Errorf("[%v]SSH->ERROR : %v", UUID, err.Error())
         utils.SendHXMsg(cron.CronName, cron.CronHx, err.Error())
         return err
     }
@@ -118,7 +118,7 @@ func CronSSHRun(cron models.SysCron) error {
 
     buf, err := session.CombinedOutput(cron.CronCmd)
     if err != nil {
-        seelog.Errorf("[%v]ERROR : %v", UUID, err.Error())
+        seelog.Errorf("[%v]SSH->ERROR : %v", UUID, err.Error())
         utils.SendHXMsg(cron.CronName, cron.CronHx, err.Error())
         return err
     }

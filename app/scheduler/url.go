@@ -28,7 +28,7 @@ func CronCheckUrl(cron models.SysCron) error {
 
     req, err := http.NewRequest("GET", cron.CronCmd, strings.NewReader(data))
     if err != nil {
-        seelog.Errorf("[%v]ERROR : %v", UUID, err.Error())
+        seelog.Errorf("[%v]URL->ERROR : %v", UUID, err.Error())
         return err
     }
 
@@ -37,14 +37,14 @@ func CronCheckUrl(cron models.SysCron) error {
 
     res, err := Client.Do(req)
     if err != nil {
-        seelog.Errorf("[%v]ERROR : %v", UUID, err.Error())
+        seelog.Errorf("[%v]URL->ERROR : %v", UUID, err.Error())
         utils.SendHXMsg("URL检查失败通知", cron.CronHx, cron.CronCmd)
         return err
     }
     defer res.Body.Close()
 
     if res.StatusCode != 200 {
-        seelog.Warnf("[%v]%v响应码非200", UUID, cron.CronCmd)
+        seelog.Warnf("[%v]URL->%v响应码非200", UUID, cron.CronCmd)
         utils.SendHXMsg("URL响应码异常通知", cron.CronHx, fmt.Sprintf("%v [%v]", cron.CronCmd, res.StatusCode))
     }
 
@@ -59,7 +59,7 @@ func CronCheckUrl(cron models.SysCron) error {
 
     */
 
-    seelog.Infof("[%v]>>> Check [%v] Status Code : %v <<<", UUID, cron.CronCmd, res.StatusCode)
+    seelog.Infof("[%v]URL->>>> Check [%v] Status Code : %v <<<", UUID, cron.CronCmd, res.StatusCode)
     seelog.Infof("[%v]URL->[%v] Finish ...", UUID, cron.CronCmd)
 
     return nil
