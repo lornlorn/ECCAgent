@@ -7,10 +7,10 @@ import (
 )
 
 func ScanCMDList() error {
-    Ftp := struct{
-        Host string
-        Username string
-        Password string
+    Ftp := struct {
+        Host      string
+        Username  string
+        Password  string
         RemoteDir string
     }{
         Host:      utils.GetConfig("hx", "host"),
@@ -38,7 +38,6 @@ func ScanCMDList() error {
 
     buf, err := ioutil.ReadAll(res)
     println(string(buf))
-
 
     client.Logout()
     client.Quit()

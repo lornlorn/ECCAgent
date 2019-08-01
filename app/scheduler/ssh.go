@@ -91,25 +91,35 @@ func SSHConnect(host string, user string, password string, key string) (*ssh.Ses
 }
 
 //func SSHRun(host string, auth string, privkey string, cmdstr string, hxTos string, cronName string) error {
-func SSHRun(cron models.SysCron) error {
-    seelog.Debugf("SSHRun...%v", cron.CronName)
+func CronSSHRun(cron models.SysCron) error {
+    UUID := utils.GetUniqueID()
+    seelog.Infof("[%v]SSH->[%v@%v]->[%v] Begin ...", UUID, cron.CronAuth, cron.CronHost, cron.CronCmd)
 
-    userInfo := strings.Split(auth, "/")
-    user := userInfo[0]
-    password := userInfo[1]
+    var user string
+    var password string
 
-    session, err := SSHConnect(host, user, password, privkey)
+    userInfo := strings.Split(cron.CronAuth, "/")
+    if len(userInfo) == 1 {
+        user = userInfo[0]
+    } else if len(userInfo) == 2 {
+        user = userInfo[0]
+        password = userInfo[1]
+    } else {
+        seelog.Errorf("[%v]SSH Auth ERROR : [%v@%v]", UUID, cron.CronAuth, cron.CronHost)
+    }
+
+    session, err := SSHConnect(cron.CronHost, user, password, cron.CronPrivkey)
     if err != nil {
-        seelog.Errorf("ERROR : %v", err.Error())
-        utils.SendHXMsg(cronName, hxTos, err.Error())
+        seelog.Errorf("[%v]ERROR : %v", UUID, err.Error())
+        utils.SendHXMsg(cron.CronName, cron.CronHx, err.Error())
         return err
     }
     defer session.Close()
 
-    buf, err := session.CombinedOutput(cmdstr)
+    buf, err := session.CombinedOutput(cron.CronCmd)
     if err != nil {
-        seelog.Errorf("ERROR : %v", err.Error())
-        utils.SendHXMsg(cronName, hxTos, err.Error())
+        seelog.Errorf("[%v]ERROR : %v", UUID, err.Error())
+        utils.SendHXMsg(cron.CronName, cron.CronHx, err.Error())
         return err
     }
     seelog.Debug(string(buf))
@@ -144,9 +154,9 @@ func SSHRun(cron models.SysCron) error {
 
     */
 
-    utils.SendHXMsg(cronName, hxTos, string(buf))
+    utils.SendHXMsg(cron.CronName, cron.CronHx, string(buf))
 
-    seelog.Trace("finish...")
+    seelog.Infof("[%v]SSH->[%v@%v]->[%v] Finish ...", UUID, cron.CronAuth, cron.CronHost, cron.CronCmd)
 
     return nil
 }

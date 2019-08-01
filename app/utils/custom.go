@@ -65,21 +65,23 @@ func SendHXMsg(title string, tos string, data string) error {
         seelog.Errorf("ERROR : %v", err.Error())
         return err
     }
-    seelog.Debugf("通知消息文件已生成[%v] ...", filename)
+    seelog.Infof("通知消息文件已生成[%v] ...", filename)
 
     err = ftpMsgFile(filename)
     if err != nil {
         seelog.Errorf("ERROR : %v", err.Error())
         return err
     }
+    seelog.Info("行信通知发送成功 ...")
+
     return nil
 }
 
 func ftpMsgFile(file string) error {
-    Ftp := struct{
-        Host string
-        Username string
-        Password string
+    Ftp := struct {
+        Host      string
+        Username  string
+        Password  string
         RemoteDir string
     }{
         Host:      GetConfig("hx", "host"),

@@ -1,6 +1,7 @@
 package scheduler
 
 import (
+    "app/models"
     "app/utils"
     "fmt"
     "github.com/cihub/seelog"
@@ -12,7 +13,10 @@ import (
 /*
 CheckUrl func(ip string, data []byte) ([]byte, error)
 */
-func CheckUrl(method string, url string, hxTos string) error {
+func CronCheckUrl(cron models.SysCron) error {
+    UUID := utils.GetUniqueID()
+    seelog.Infof("[%v]URL->[%v] Begin ...", UUID, cron.CronCmd)
+
     // Client http.Client
     var Client *http.Client
     //seelog.Info("InitClient begin ...")
@@ -22,9 +26,9 @@ func CheckUrl(method string, url string, hxTos string) error {
 
     var data string
 
-    req, err := http.NewRequest(method, url, strings.NewReader(data))
+    req, err := http.NewRequest("GET", cron.CronCmd, strings.NewReader(data))
     if err != nil {
-        seelog.Errorf("ERROR : %v", err.Error())
+        seelog.Errorf("[%v]ERROR : %v", UUID, err.Error())
         return err
     }
 
@@ -33,15 +37,15 @@ func CheckUrl(method string, url string, hxTos string) error {
 
     res, err := Client.Do(req)
     if err != nil {
-        seelog.Errorf("ERROR : %v", err.Error())
-        utils.SendHXMsg("URL检查失败通知", hxTos, url)
+        seelog.Errorf("[%v]ERROR : %v", UUID, err.Error())
+        utils.SendHXMsg("URL检查失败通知", cron.CronHx, cron.CronCmd)
         return err
     }
     defer res.Body.Close()
 
     if res.StatusCode != 200 {
-        seelog.Warnf("%v响应码非200", url)
-        utils.SendHXMsg("URL响应码异常通知", hxTos, fmt.Sprintf("%v [%v]", url, res.StatusCode))
+        seelog.Warnf("[%v]%v响应码非200", UUID, cron.CronCmd)
+        utils.SendHXMsg("URL响应码异常通知", cron.CronHx, fmt.Sprintf("%v [%v]", cron.CronCmd, res.StatusCode))
     }
 
     /*
@@ -55,7 +59,8 @@ func CheckUrl(method string, url string, hxTos string) error {
 
     */
 
-    seelog.Infof(">>> Check [%v] Status Code : %v <<<", url, res.StatusCode)
+    seelog.Infof("[%v]>>> Check [%v] Status Code : %v <<<", UUID, cron.CronCmd, res.StatusCode)
+    seelog.Infof("[%v]URL->[%v] Finish ...", UUID, cron.CronCmd)
 
     return nil
 }
