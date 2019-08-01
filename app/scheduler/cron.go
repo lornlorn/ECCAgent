@@ -33,7 +33,7 @@ func InitCron() error {
                 cronObj.CronSpec,
                 func() {
                     //Execute("cron", "", cronCmd, cronEnvs, cronArgs...)
-                    CronSSHRun(cronObj)
+                    SSHRun(cronObj)
                 },
                 cronlib.AsyncMode(),
             )
@@ -54,7 +54,7 @@ func InitCron() error {
             job, err := cronlib.NewJobModel(
                 cronObj.CronSpec,
                 func() {
-                    CronCheckUrl(cronObj)
+                    CheckUrl(cronObj)
                 },
                 cronlib.AsyncMode(),
             )

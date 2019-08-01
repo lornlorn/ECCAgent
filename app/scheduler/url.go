@@ -3,19 +3,22 @@ package scheduler
 import (
     "app/models"
     "app/utils"
-    "fmt"
+    "errors"
     "github.com/cihub/seelog"
     "net/http"
     "net/http/cookiejar"
     "strings"
 )
 
+type destUrl struct {
+    url  string
+    hxTos string
+}
+
 /*
 CheckUrl func(ip string, data []byte) ([]byte, error)
 */
-func CronCheckUrl(cron models.SysCron) error {
-    UUID := utils.GetUniqueID()
-    seelog.Infof("[%v]URL->[%v] Begin ...", UUID, cron.CronCmd)
+func (u destUrl)checkUrl() error {
 
     // Client http.Client
     var Client *http.Client
@@ -26,9 +29,8 @@ func CronCheckUrl(cron models.SysCron) error {
 
     var data string
 
-    req, err := http.NewRequest("GET", cron.CronCmd, strings.NewReader(data))
+    req, err := http.NewRequest("GET", u.url, strings.NewReader(data))
     if err != nil {
-        seelog.Errorf("[%v]URL->ERROR : %v", UUID, err.Error())
         return err
     }
 
@@ -37,15 +39,12 @@ func CronCheckUrl(cron models.SysCron) error {
 
     res, err := Client.Do(req)
     if err != nil {
-        seelog.Errorf("[%v]URL->ERROR : %v", UUID, err.Error())
-        utils.SendHXMsg("URL检查失败通知", cron.CronHx, cron.CronCmd)
         return err
     }
     defer res.Body.Close()
 
     if res.StatusCode != 200 {
-        seelog.Warnf("[%v]URL->%v响应码非200", UUID, cron.CronCmd)
-        utils.SendHXMsg("URL响应码异常通知", cron.CronHx, fmt.Sprintf("%v [%v]", cron.CronCmd, res.StatusCode))
+        return errors.New("响应码非200")
     }
 
     /*
@@ -59,8 +58,37 @@ func CronCheckUrl(cron models.SysCron) error {
 
     */
 
-    seelog.Infof("[%v]URL->>>> Check [%v] Status Code : %v <<<", UUID, cron.CronCmd, res.StatusCode)
-    seelog.Infof("[%v]URL->[%v] Finish ...", UUID, cron.CronCmd)
+    return nil
+}
+
+func CheckUrl(obj interface{}) error {
+    var dest destUrl
+
+    switch obj.(type) {
+    case models.SysCron:
+        data := obj.(models.SysCron)
+        dest = destUrl{
+            url:  data.CronCmd,
+            hxTos: data.CronHx,
+        }
+    case string:
+
+    default:
+        return errors.New("Wrong Arg Type ...")
+    }
+
+    UUID := utils.GetUniqueID()
+    seelog.Infof("[%v]URL->[%v] Begin ...", UUID, dest.url)
+
+    err := dest.checkUrl()
+    if err != nil {
+        seelog.Errorf("[%v]URL->ERROR : %v", UUID, err.Error())
+        utils.SendHXMsg("URL检查失败通知", dest.hxTos, dest.url)
+        return err
+    }
+
+    seelog.Infof("[%v]URL->>>> Check [%v] OK! <<<", UUID, dest.url)
+    seelog.Infof("[%v]URL->[%v] Finish ...", UUID, dest.url)
 
     return nil
 }

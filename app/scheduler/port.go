@@ -9,14 +9,14 @@ import (
     "time"
 )
 
-type dest struct {
+type destPort struct {
     addr  string
     hxTos string
 }
 
-func (s dest) portScan() error {
+func (p destPort) portScan() error {
 
-    conn, err := net.DialTimeout("tcp", s.addr, 5*time.Second)
+    conn, err := net.DialTimeout("tcp", p.addr, 5*time.Second)
     if err != nil {
         return err
     }
@@ -26,12 +26,12 @@ func (s dest) portScan() error {
 }
 
 func PortScan(obj interface{}) error {
-    var scanner dest
+    var dest destPort
 
     switch obj.(type) {
     case models.SysCron:
         data := obj.(models.SysCron)
-        scanner = dest{
+        dest = destPort{
             addr:  data.CronCmd,
             hxTos: data.CronHx,
         }
@@ -42,17 +42,17 @@ func PortScan(obj interface{}) error {
     }
 
     UUID := utils.GetUniqueID()
-    seelog.Infof("[%v]PORT->[%v] Begin ...", UUID, scanner.addr)
+    seelog.Infof("[%v]PORT->[%v] Begin ...", UUID, dest.addr)
 
-    err := scanner.portScan()
+    err := dest.portScan()
     if err != nil {
         seelog.Errorf("[%v]PORT->ERROR : %v", UUID, err.Error())
-        utils.SendHXMsg("端口探测失败通知", scanner.hxTos, scanner.addr)
+        utils.SendHXMsg("端口探测失败通知", dest.hxTos, dest.addr)
         return err
     }
 
-    seelog.Infof("[%v]PORT->>>> Check [%v] OK! <<<", UUID, scanner.addr)
-    seelog.Infof("[%v]PORT->[%v] Finish ...", UUID, scanner.addr)
+    seelog.Infof("[%v]PORT->>>> Check [%v] OK! <<<", UUID, dest.addr)
+    seelog.Infof("[%v]PORT->[%v] Finish ...", UUID, dest.addr)
 
     return nil
 }

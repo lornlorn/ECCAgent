@@ -3,6 +3,7 @@ package scheduler
 import (
     "app/models"
     "app/utils"
+    "errors"
     "github.com/cihub/seelog"
     "golang.org/x/crypto/ssh"
     "io/ioutil"
@@ -10,7 +11,17 @@ import (
     "strings"
 )
 
-func SSHConnect(host string, user string, password string, key string) (*ssh.Session, error) {
+type destSsh struct {
+    name string
+    host  string
+    user string
+    password string
+    privkey string
+    command string
+    hxTos string
+}
+
+func sshConnect(host string, user string, password string, key string) (*ssh.Session, error) {
     var (
         auth []ssh.AuthMethod
         //addr         string
@@ -91,38 +102,18 @@ func SSHConnect(host string, user string, password string, key string) (*ssh.Ses
 }
 
 //func SSHRun(host string, auth string, privkey string, cmdstr string, hxTos string, cronName string) error {
-func CronSSHRun(cron models.SysCron) error {
-    UUID := utils.GetUniqueID()
-    seelog.Infof("[%v]SSH->[%v@%v]->[%v] Begin ...", UUID, cron.CronAuth, cron.CronHost, cron.CronCmd)
+func (s destSsh)sshRun() ([]byte, error) {
 
-    var user string
-    var password string
-
-    userInfo := strings.Split(cron.CronAuth, "/")
-    if len(userInfo) == 1 {
-        user = userInfo[0]
-    } else if len(userInfo) == 2 {
-        user = userInfo[0]
-        password = userInfo[1]
-    } else {
-        seelog.Errorf("[%v]SSH->SSH Auth ERROR : [%v@%v]", UUID, cron.CronAuth, cron.CronHost)
-    }
-
-    session, err := SSHConnect(cron.CronHost, user, password, cron.CronPrivkey)
+    session, err := sshConnect(s.host, s.user, s.password, s.privkey)
     if err != nil {
-        seelog.Errorf("[%v]SSH->ERROR : %v", UUID, err.Error())
-        utils.SendHXMsg(cron.CronName, cron.CronHx, err.Error())
-        return err
+        return nil, err
     }
     defer session.Close()
 
-    buf, err := session.CombinedOutput(cron.CronCmd)
+    buf, err := session.CombinedOutput(s.command)
     if err != nil {
-        seelog.Errorf("[%v]SSH->ERROR : %v", UUID, err.Error())
-        utils.SendHXMsg(cron.CronName, cron.CronHx, err.Error())
-        return err
+        return nil, err
     }
-    seelog.Debug(string(buf))
 
     /*
        cmdlist := strings.Split(cmdstr, ";")
@@ -154,9 +145,58 @@ func CronSSHRun(cron models.SysCron) error {
 
     */
 
-    utils.SendHXMsg(cron.CronName, cron.CronHx, string(buf))
+    return buf, nil
+}
 
-    seelog.Infof("[%v]SSH->[%v@%v]->[%v] Finish ...", UUID, cron.CronAuth, cron.CronHost, cron.CronCmd)
+func SSHRun(obj interface{}) error {
+
+    var dest destSsh
+
+    switch obj.(type) {
+    case models.SysCron:
+        data := obj.(models.SysCron)
+        var user string
+        var password string
+
+        userInfo := strings.Split(data.CronAuth, "/")
+        if len(userInfo) == 1 {
+            user = userInfo[0]
+        } else if len(userInfo) == 2 {
+            user = userInfo[0]
+            password = userInfo[1]
+        } else {
+            seelog.Errorf("SSH->Wrong Auth Config : [%v@%v]", data.CronAuth, data.CronHost)
+            return errors.New("Wrong Auth Config")
+        }
+        dest = destSsh{
+            name:data.CronName,
+            host:data.CronHost,
+            user:user,
+            password:password,
+            privkey:data.CronPrivkey,
+            command:data.CronCmd,
+            hxTos:data.CronHx,
+        }
+    case string:
+
+    default:
+        return errors.New("Wrong Arg Type ...")
+    }
+
+    UUID := utils.GetUniqueID()
+    seelog.Infof("[%v]SSH->[%v@%v]->[%v] Begin ...", UUID, dest.user, dest.host, dest.command)
+
+    ret, err := dest.sshRun()
+    if err != nil {
+        seelog.Errorf("[%v]SSH->ERROR : %v", UUID, err.Error())
+        utils.SendHXMsg(dest.name, dest.hxTos, err.Error())
+        return err
+    }
+    seelog.Debug(string(ret))
+
+    utils.SendHXMsg(dest.name, dest.hxTos, string(ret))
+
+    seelog.Infof("[%v]SSH->[%v@%v]->[%v] Finish ...", UUID, dest.user, dest.host, dest.command)
 
     return nil
 }
