@@ -3,25 +3,56 @@ package scheduler
 import (
     "app/models"
     "app/utils"
+    "errors"
     "github.com/cihub/seelog"
     "net"
     "time"
 )
 
-func CronPortScan(cron models.SysCron) error {
-    UUID := utils.GetUniqueID()
-    seelog.Infof("[%v]PORT->[%v] Begin ...", UUID, cron.CronCmd)
+type dest struct {
+    addr  string
+    hxTos string
+}
 
-    conn, err := net.DialTimeout("tcp", cron.CronCmd, 5*time.Second)
+func (s dest) portScan() error {
+
+    conn, err := net.DialTimeout("tcp", s.addr, 5*time.Second)
     if err != nil {
-        seelog.Errorf("[%v]PORT->ERROR : %v", UUID, err.Error())
-        utils.SendHXMsg("端口探测失败通知", cron.CronHx, cron.CronCmd)
         return err
     }
     defer conn.Close()
 
-    seelog.Infof("[%v]PORT->>>> Check [%v] OK! <<<", UUID, cron.CronCmd)
-    seelog.Infof("[%v]PORT->[%v] Finish ...", UUID, cron.CronCmd)
+    return nil
+}
+
+func PortScan(obj interface{}) error {
+    var scanner dest
+
+    switch obj.(type) {
+    case models.SysCron:
+        data := obj.(models.SysCron)
+        scanner = dest{
+            addr:  data.CronCmd,
+            hxTos: data.CronHx,
+        }
+    case string:
+
+    default:
+        return errors.New("Wrong Arg Type ...")
+    }
+
+    UUID := utils.GetUniqueID()
+    seelog.Infof("[%v]PORT->[%v] Begin ...", UUID, scanner.addr)
+
+    err := scanner.portScan()
+    if err != nil {
+        seelog.Errorf("[%v]PORT->ERROR : %v", UUID, err.Error())
+        utils.SendHXMsg("端口探测失败通知", scanner.hxTos, scanner.addr)
+        return err
+    }
+
+    seelog.Infof("[%v]PORT->>>> Check [%v] OK! <<<", UUID, scanner.addr)
+    seelog.Infof("[%v]PORT->[%v] Finish ...", UUID, scanner.addr)
 
     return nil
 }

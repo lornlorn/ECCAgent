@@ -28,7 +28,7 @@ func InitCron() error {
 
         switch cronObj.CronType { //finger is declared in switch
         case "SSH":
-            seelog.Trace("SSH")
+            //seelog.Trace("SSH")
             job, err := cronlib.NewJobModel(
                 cronObj.CronSpec,
                 func() {
@@ -50,7 +50,7 @@ func InitCron() error {
         case "SQL":
             seelog.Trace("SQL")
         case "URL":
-            seelog.Trace("URL")
+            //seelog.Trace("URL")
             job, err := cronlib.NewJobModel(
                 cronObj.CronSpec,
                 func() {
@@ -69,11 +69,11 @@ func InitCron() error {
                 return err
             }
         case "PORT":
-            seelog.Trace("PORT")
+            //seelog.Trace("PORT")
             job, err := cronlib.NewJobModel(
                 cronObj.CronSpec,
                 func() {
-                    CronPortScan(cronObj)
+                    PortScan(cronObj)
                 },
                 cronlib.AsyncMode(),
             )

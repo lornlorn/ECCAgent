@@ -41,5 +41,6 @@ func ScanCMDList() error {
 
     client.Logout()
     client.Quit()
+
     return nil
 }

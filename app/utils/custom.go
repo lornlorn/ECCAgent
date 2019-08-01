@@ -93,18 +93,18 @@ func ftpMsgFile(file string) error {
     var err error
     client, err := NewFtpClient(Ftp.Host, Ftp.Username, Ftp.Password)
     if err != nil {
-        seelog.Errorf("ERROR : %v", err.Error())
+        //seelog.Errorf("ERROR : %v", err.Error())
         return err
     }
     err = client.ChangeDir(Ftp.RemoteDir)
     if err != nil {
-        seelog.Errorf("ERROR : %v", err.Error())
+        //seelog.Errorf("ERROR : %v", err.Error())
         return err
     }
 
     fileHandle, err := os.Open(file)
     if err != nil {
-        seelog.Errorf("ERROR : %v", err.Error())
+        //seelog.Errorf("ERROR : %v", err.Error())
         return err
     }
     defer fileHandle.Close()
@@ -112,7 +112,7 @@ func ftpMsgFile(file string) error {
     fileBaseName := filepath.Base(file)
     err = client.Stor(fileBaseName, fileHandle)
     if err != nil {
-        seelog.Errorf("ERROR : %v", err.Error())
+        //seelog.Errorf("ERROR : %v", err.Error())
         return err
     }
 
