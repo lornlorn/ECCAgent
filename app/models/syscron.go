@@ -11,17 +11,25 @@ import (
 SysCron struct map to table sys_cron
 */
 type SysCron struct {
-    CronId      int    `xorm:"INTEGER NOT NULL UNIQUE PK"`
-    CronName    string `xorm:"VARCHAR(256) NOT NULL UNIQUE"`
-    CronType    string `xorm:"VARCHAR(16) NOT NULL"`
-    CronSpec    string `xorm:"VARCHAR(128) NOT NULL"`
-    CronHost    string `xorm:"VARCHAR(512)"`
-    CronAuth    string `xorm:"VARCHAR(512)"`
-    CronPrivkey string `xorm:"VARCHAR(512)"`
-    CronCmd     string `xorm:"VARCHAR(512)   NOT NULL"`
-    CronStatus  string `xorm:"VARCHAR(16)   NOT NULL"`
-    CronDesc    string `xorm:"VARCHAR(1024)"`
-    CronHx      string `xorm:"VARCHAR(1024)"`
+    CronId      int    `xorm:"'CRON_ID' INTEGER NOT NULL UNIQUE PK"`
+    CronName    string `xorm:"'CRON_NAME' VARCHAR(256) NOT NULL UNIQUE"`
+    CronType    string `xorm:"'CRON_TYPE' VARCHAR(16) NOT NULL"`
+    CronSpec    string `xorm:"'CRON_SPEC' VARCHAR(128) NOT NULL"`
+    CronHost    string `xorm:"'CRON_HOST' VARCHAR(512)"`
+    CronAuth    string `xorm:"'CRON_AUTH' VARCHAR(512)"`
+    CronPrivkey string `xorm:"'CRON_PRIVKEY' VARCHAR(512)"`
+    CronCmd     string `xorm:"'CRON_CMD' VARCHAR(512) NOT NULL"`
+    CronStatus  string `xorm:"'CRON_STATUS' VARCHAR(16) NOT NULL"`
+    CronDesc    string `xorm:"'CRON_DESC' VARCHAR(1024)"`
+    CronHx      string `xorm:"'CRON_HX' VARCHAR(1024)"`
+}
+
+/*
+TableName xorm mapper
+SysCron struct map to table SYS_CRON
+*/
+func (cron SysCron) TableName() string {
+    return "SYS_CRON"
 }
 
 /*
@@ -42,10 +50,10 @@ type NewCron struct {
 
 /*
 TableName xorm mapper
-NewComponent struct map to table tb_component
+NewCron struct map to table SYS_CRON
 */
 func (cron NewCron) TableName() string {
-    return "sys_cron"
+    return "SYS_CRON"
 }
 
 // Save insert method

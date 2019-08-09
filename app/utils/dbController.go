@@ -3,6 +3,7 @@ package utils
 import (
     "github.com/cihub/seelog"
     "github.com/go-xorm/xorm"       // _ "github.com/lib/pq" // postgresql driver
+    _ "github.com/mattn/go-oci8"    // oracle driver
     _ "github.com/mattn/go-sqlite3" // sqlite3 driver
 )
 
