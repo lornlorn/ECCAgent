@@ -31,7 +31,7 @@ func ReadRequestBody2JSON(reqBody io.ReadCloser) []byte {
     body, err := ioutil.ReadAll(reqBody)
     if err != nil {
         seelog.Errorf("ioutil.ReadAll Error : %v", err)
-        return []byte{}
+        return nil
     }
 
     return body
@@ -67,7 +67,7 @@ func Convert2JSON(data interface{}) []byte {
         retdata, err := json.Marshal(data)
         if err != nil {
             seelog.Errorf("json.Marshal Error : %v", err)
-            return []byte("")
+            return nil
         }
         return retdata
     }

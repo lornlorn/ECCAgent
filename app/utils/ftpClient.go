@@ -13,11 +13,15 @@ func NewFtpClient(host string, username string, password string) (*ftp.ServerCon
     var err error
     conn, err := ftp.DialTimeout(host, 5*time.Second)
     if err != nil {
-        return &ftp.ServerConn{}, err
+        return nil, err
     }
     err = conn.Login(username, password)
     if err != nil {
-        return &ftp.ServerConn{}, err
+        return nil, err
+    }
+    err = conn.NoOp()
+    if err != nil {
+        return nil, err
     }
     return conn, nil
 }

@@ -69,7 +69,7 @@ func SendHXMsg(uuid string, title string, tos string, data string) error {
 
     err = ftpMsgFile(filename)
     if err != nil {
-        seelog.Errorf("[%v]ERROR : %v", uuid, err.Error())
+        seelog.Errorf("[%v]行信通知发送失败->ERROR:\n%v", uuid, err.Error())
         return err
     }
     seelog.Infof("[%v]行信通知发送成功 ...", uuid)
@@ -78,7 +78,7 @@ func SendHXMsg(uuid string, title string, tos string, data string) error {
 }
 
 func ftpMsgFile(file string) error {
-    Ftp := struct {
+    ftp := struct {
         Host      string
         Username  string
         Password  string
@@ -91,12 +91,12 @@ func ftpMsgFile(file string) error {
     }
 
     var err error
-    client, err := NewFtpClient(Ftp.Host, Ftp.Username, Ftp.Password)
+    client, err := NewFtpClient(ftp.Host, ftp.Username, ftp.Password)
     if err != nil {
         //seelog.Errorf("ERROR : %v", err.Error())
         return err
     }
-    err = client.ChangeDir(Ftp.RemoteDir)
+    err = client.ChangeDir(ftp.RemoteDir)
     if err != nil {
         //seelog.Errorf("ERROR : %v", err.Error())
         return err

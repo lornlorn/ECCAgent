@@ -190,12 +190,12 @@ func SSHRun(obj interface{}) error {
     ret, err := dest.sshRun()
     if err != nil {
         seelog.Errorf("[%v]SSH->ERROR:\n%v", UUID, err.Error())
-        utils.SendHXMsg(UUID, dest.name, dest.hxTos, fmt.Sprintf("IP:%v\nCMD:%v\nRESULT:%v", dest.host,dest.command, err.Error()))
+        utils.SendHXMsg(UUID, dest.name, dest.hxTos, fmt.Sprintf("IP:%v\nCMD:%v\nRESULT:%v", dest.host, dest.command, err.Error()))
         return err
     }
     seelog.Debugf("[%v]SSH->\n%v", UUID, string(ret))
 
-    utils.SendHXMsg(UUID, dest.name, dest.hxTos, fmt.Sprintf("IP:%v\nCMD:%v\nRESULT:%v", dest.host,dest.command, string(ret)))
+    utils.SendHXMsg(UUID, dest.name, dest.hxTos, fmt.Sprintf("IP:%v\nCMD:%v\nRESULT:%v", dest.host, dest.command, string(ret)))
 
     seelog.Infof("[%v]SSH->[%v@%v]->[%v] Finish ...", UUID, dest.user, dest.host, dest.command)
 

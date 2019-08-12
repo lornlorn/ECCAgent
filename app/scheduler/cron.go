@@ -89,6 +89,23 @@ func InitCron() error {
             }
         case "SCAN":
             seelog.Trace("SCAN")
+            job, err := cronlib.NewJobModel(
+                cronObj.CronSpec,
+                func() {
+                    ScanDaemon(cronObj)
+                },
+                cronlib.AsyncMode(),
+            )
+            if err != nil {
+                seelog.Errorf("Cron Set Fail : [%v]", cronObj.CronName)
+                return err
+            }
+
+            err = Cron.Register(cronObj.CronName, job)
+            if err != nil {
+                seelog.Errorf("Cron Register Error : %v", err.Error())
+                return err
+            }
 
         default: //default case
             seelog.Warn("incorrect cron type")
