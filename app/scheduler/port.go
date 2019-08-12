@@ -46,8 +46,8 @@ func PortScan(obj interface{}) error {
 
     err := dest.portScan()
     if err != nil {
-        seelog.Errorf("[%v]PORT->ERROR : %v", UUID, err.Error())
-        utils.SendHXMsg("端口探测失败通知", dest.hxTos, dest.addr)
+        seelog.Errorf("[%v]PORT->ERROR:\n%v", UUID, err.Error())
+        utils.SendHXMsg(UUID, "端口探测失败通知", dest.hxTos, dest.addr)
         return err
     }
 

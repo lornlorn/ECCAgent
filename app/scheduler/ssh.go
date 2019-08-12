@@ -4,6 +4,7 @@ import (
     "app/models"
     "app/utils"
     "errors"
+    "fmt"
     "github.com/cihub/seelog"
     "golang.org/x/crypto/ssh"
     "io/ioutil"
@@ -12,13 +13,13 @@ import (
 )
 
 type destSsh struct {
-    name string
-    host  string
-    user string
+    name     string
+    host     string
+    user     string
     password string
-    privkey string
-    command string
-    hxTos string
+    privkey  string
+    command  string
+    hxTos    string
 }
 
 func sshConnect(host string, user string, password string, key string) (*ssh.Session, error) {
@@ -102,7 +103,7 @@ func sshConnect(host string, user string, password string, key string) (*ssh.Ses
 }
 
 //func SSHRun(host string, auth string, privkey string, cmdstr string, hxTos string, cronName string) error {
-func (s destSsh)sshRun() ([]byte, error) {
+func (s destSsh) sshRun() ([]byte, error) {
 
     session, err := sshConnect(s.host, s.user, s.password, s.privkey)
     if err != nil {
@@ -169,13 +170,13 @@ func SSHRun(obj interface{}) error {
             return errors.New("Wrong Auth Config")
         }
         dest = destSsh{
-            name:data.CronName,
-            host:data.CronHost,
-            user:user,
-            password:password,
-            privkey:data.CronPrivkey,
-            command:data.CronCmd,
-            hxTos:data.CronHx,
+            name:     data.CronName,
+            host:     data.CronHost,
+            user:     user,
+            password: password,
+            privkey:  data.CronPrivkey,
+            command:  data.CronCmd,
+            hxTos:    data.CronHx,
         }
     case string:
 
@@ -188,13 +189,13 @@ func SSHRun(obj interface{}) error {
 
     ret, err := dest.sshRun()
     if err != nil {
-        seelog.Errorf("[%v]SSH->ERROR : %v", UUID, err.Error())
-        utils.SendHXMsg(dest.name, dest.hxTos, err.Error())
+        seelog.Errorf("[%v]SSH->ERROR:\n%v", UUID, err.Error())
+        utils.SendHXMsg(UUID, dest.name, dest.hxTos, fmt.Sprintf("IP:%v\nCMD:%v\nRESULT:%v", dest.host,dest.command, err.Error()))
         return err
     }
-    seelog.Debug(string(ret))
+    seelog.Debugf("[%v]SSH->\n%v", UUID, string(ret))
 
-    utils.SendHXMsg(dest.name, dest.hxTos, string(ret))
+    utils.SendHXMsg(UUID, dest.name, dest.hxTos, fmt.Sprintf("IP:%v\nCMD:%v\nRESULT:%v", dest.host,dest.command, string(ret)))
 
     seelog.Infof("[%v]SSH->[%v@%v]->[%v] Finish ...", UUID, dest.user, dest.host, dest.command)
 

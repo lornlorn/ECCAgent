@@ -51,28 +51,28 @@ func WriteRunLog2File(uuid string, content []byte, beginTimeStr string, endTimeS
     return logFilePath, nil
 }
 
-func SendHXMsg(title string, tos string, data string) error {
+func SendHXMsg(uuid string, title string, tos string, data string) error {
     nowTime := time.Now()
     timeFormat := "20060102150405" // 时间格式化模板
     nowTimeStr := nowTime.Format(timeFormat)
 
-    hxData := fmt.Sprintf("title=%v\ntop=%v\ncontent={\n[%v]%v\n}END\n", title, tos, nowTimeStr, data)
-    seelog.Debug(hxData)
+    hxData := fmt.Sprintf("title=%v\ntop=%v\ncontent={\n[%v]\n%v\n}END\n", title, tos, nowTimeStr, data)
+    seelog.Debugf("[%v]%v", uuid, hxData)
 
     filename := fmt.Sprintf("./data/msgfile/%v_%v.dat", RandomString(10), nowTimeStr)
     err := WriteFile(filename, hxData)
     if err != nil {
-        seelog.Errorf("ERROR : %v", err.Error())
+        seelog.Errorf("[%v]ERROR : %v", uuid, err.Error())
         return err
     }
-    seelog.Infof("通知消息文件已生成[%v] ...", filename)
+    seelog.Infof("[%v]通知消息文件已生成[%v] ...", uuid, filename)
 
     err = ftpMsgFile(filename)
     if err != nil {
-        seelog.Errorf("ERROR : %v", err.Error())
+        seelog.Errorf("[%v]ERROR : %v", uuid, err.Error())
         return err
     }
-    seelog.Info("行信通知发送成功 ...")
+    seelog.Infof("[%v]行信通知发送成功 ...", uuid)
 
     return nil
 }

@@ -3,8 +3,6 @@ package main
 import (
     "app/scheduler"
     "github.com/cihub/seelog"
-    "log"
-    "net/http"
     _ "net/http/pprof"
 
     "app/utils"
@@ -19,9 +17,9 @@ const (
 
 func main() {
     //这里实现了远程获取pprof数据的接口
-    go func() {
-        log.Println(http.ListenAndServe(":9999", nil))
-    }()
+    //go func() {
+    //    log.Println(http.ListenAndServe(":9999", nil))
+    //}()
 
     var err error
     var msg string

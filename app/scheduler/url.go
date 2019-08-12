@@ -11,14 +11,14 @@ import (
 )
 
 type destUrl struct {
-    url  string
+    url   string
     hxTos string
 }
 
 /*
 CheckUrl func(ip string, data []byte) ([]byte, error)
 */
-func (u destUrl)checkUrl() error {
+func (u destUrl) checkUrl() error {
 
     // Client http.Client
     var Client *http.Client
@@ -68,7 +68,7 @@ func CheckUrl(obj interface{}) error {
     case models.SysCron:
         data := obj.(models.SysCron)
         dest = destUrl{
-            url:  data.CronCmd,
+            url:   data.CronCmd,
             hxTos: data.CronHx,
         }
     case string:
@@ -82,8 +82,8 @@ func CheckUrl(obj interface{}) error {
 
     err := dest.checkUrl()
     if err != nil {
-        seelog.Errorf("[%v]URL->ERROR : %v", UUID, err.Error())
-        utils.SendHXMsg("URL检查失败通知", dest.hxTos, dest.url)
+        seelog.Errorf("[%v]URL->ERROR:\n%v", UUID, err.Error())
+        utils.SendHXMsg(UUID, "URL检查失败通知", dest.hxTos, dest.url)
         return err
     }
 

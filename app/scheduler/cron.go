@@ -95,6 +95,12 @@ func InitCron() error {
         }
     }
 
+    //Cron.StopService("http://localhost:1111/test")
+    //terr := Cron.UnRegister("http://localhost:1111/test")
+    //if terr != nil {
+    //    seelog.Error(terr.Error())
+    //}
+
     Cron.Start()
     //Cron.Wait()
     // cron.Join()
