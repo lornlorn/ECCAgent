@@ -193,7 +193,7 @@ func SSHRun(obj interface{}) error {
         utils.SendHXMsg(UUID, dest.name, dest.hxTos, fmt.Sprintf("IP:%v\nCMD:%v\nRESULT:%v", dest.host, dest.command, err.Error()))
         return err
     }
-    seelog.Debugf("[%v]SSH->\n%v", UUID, string(ret))
+    seelog.Debugf("[%v]SSH->标准输出和错误输出:\n%v", UUID, string(ret))
 
     utils.SendHXMsg(UUID, dest.name, dest.hxTos, fmt.Sprintf("IP:%v\nCMD:%v\nRESULT:%v", dest.host, dest.command, string(ret)))
 

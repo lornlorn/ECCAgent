@@ -20,7 +20,10 @@ type destScan struct {
     hxTos    string
 }
 
-func (p destScan) scanFtpFile2Line() ([]byte, error) {
+func (p destScan) scanFtpFile2Byte() ([]byte, error) {
+
+    var buf []byte
+    //var lines []string
 
     var err error
     client, err := utils.NewFtpClient(p.host, p.user, p.password)
@@ -37,12 +40,38 @@ func (p destScan) scanFtpFile2Line() ([]byte, error) {
         return nil, err
     }
 
+    //lst, _ := client.List(filePath)
+    //seelog.Trace(lst)
+
     res, err := client.Retr(fileName)
     if err != nil {
-        return nil, err
+        //seelog.Errorf("ERROR : %v", err.Error())
+        if err.Error() == "550 Failed to open file." {
+            return nil, errors.New("未找到目标文件")
+        } else {
+            return nil, err
+        }
+    } else {
+        buf, _ = ioutil.ReadAll(res)
+        //buff := bufio.NewReader(res)
+        //for {
+        //    line, err := buff.ReadString('\n')
+        //    if err != nil || io.EOF == err {
+        //        break
+        //    }
+        //    seelog.Tracef(">>>%v<<<", line)
+        //    lines = append(lines, line)
+        //}
+
+        err = client.Delete(fileName)
+        if err != nil {
+            //seelog.Errorf("ERROR : %v", err.Error())
+            if err.Error() != "226 Transfer complete." {
+                return nil, err
+            }
+        }
     }
 
-    buf, _ := ioutil.ReadAll(res)
     //println(string(buf))
 
     client.Logout()
@@ -85,14 +114,26 @@ func ScanDaemon(obj interface{}) error {
     UUID := utils.GetUniqueID()
     seelog.Infof("[%v]SCAN->[%v@%v]->[%v] Begin ...", UUID, dest.user, dest.host, dest.file)
 
-    ret, err := dest.scanFtpFile2Line()
+    ret, err := dest.scanFtpFile2Byte()
     if err != nil {
-        seelog.Errorf("[%v]SCAN->ERROR:\n%v", UUID, err.Error())
-        utils.SendHXMsg(UUID, "接收命令文件失败", dest.hxTos, fmt.Sprintf("HOST:%v@%v\nFILE:%v\nRESULT:%v", dest.user, dest.host, dest.file, err.Error()))
-        return err
+        if err.Error() != "未找到目标文件" {
+            seelog.Errorf("[%v]SCAN->ERROR:\n%v", UUID, err.Error())
+            utils.SendHXMsg(UUID, "接收命令文件失败", dest.hxTos, fmt.Sprintf("HOST:%v@%v\nFILE:%v\nRESULT:%v", dest.user, dest.host, dest.file, err.Error()))
+            return err
+        } else {
+            seelog.Infof("[%v]SCAN->无待处理命令文件 ...", UUID)
+        }
+    } else {
+        // something to run
+        seelog.Debugf("[%v]SCAN->命令文件内容:\n%v", UUID, string(ret))
+        lines := strings.Split(string(ret), "\n")
+        for idx, line := range lines {
+            if line != "" {
+                seelog.Tracef("No.%v : %v", idx, line)
+            }
+        }
     }
 
-    seelog.Debugf("[%v]SCAN->\n%v", UUID, string(ret))
     seelog.Infof("[%v]SCAN->[%v@%v]->[%v] Finish ...", UUID, dest.user, dest.host, dest.file)
 
     return nil
